@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="tr">
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <title>Kaplama Takip Sistemi</title>
@@ -18,13 +19,15 @@
     {% endfor %}
 </div>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
-        <a class="navbar-brand" href="/">Kaplama Takip</a>
+    <nav class="navbar navbar-expand-lg px-3" style="background-color: rgb(77, 53, 26);">
+        <a class="navbar-brand" href="/">
+            <img src="{% static 'img/LOGO.png' %}" alt="Logo" height="80">
+        </a>
       
         <div class="ms-auto d-flex align-items-center">
           {% if user.is_authenticated %}
             <span class="text-light me-3">
-              Merhaba, {{ user.username }}
+              Merhaba, {{ user.first_name }} {{ user.last_name }}
             </span>
             <a href="{% url 'logout' %}" class="btn btn-outline-light btn-sm">Çıkış Yap</a>
           {% else %}

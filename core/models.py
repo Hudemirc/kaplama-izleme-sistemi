@@ -3,7 +3,12 @@ from django.contrib.auth.models import User
 
 
 class WoodType(models.Model):
+    TYPE_CHOICES = [
+        ('dogal', 'Doğal'),
+        ('yapay', 'Yapay'),
+    ]
     name = models.CharField(max_length=100, unique=True)
+    wood_category = models.CharField(max_length=10, choices=TYPE_CHOICES, default='dogal')
 
     def __str__(self):
         return self.name

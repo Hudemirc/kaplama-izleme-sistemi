@@ -39,6 +39,8 @@ class Shipment(models.Model):
     updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="updated_shipments")
     updated_at = models.DateTimeField(auto_now=True)
 
+    is_filled = models.BooleanField(default=False, verbose_name="Bilgiler Girildi")
+
     def __str__(self):
         return f"Sevkiyat-{self.supplier.name} {self.date}"
     
@@ -94,9 +96,9 @@ class Pallet(models.Model):
     updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="updated_pallets")
     updated_at = models.DateTimeField(auto_now=True)
 
-    def save(self, *args, **kwargs):
+    is_inspected = models.BooleanField(default=False, verbose_name="Denetim Durumu")
 
-        
+    def save(self, *args, **kwargs):
         self.total_price = self.total_area * float(self.unit_price)
         self.total_vat = self.total_price * float(self.vat_rate) / 100
         self.total_price_with_vat = self.total_price + self.total_vat
@@ -104,6 +106,7 @@ class Pallet(models.Model):
             super().save(*args, **kwargs)  # İlk save, pk'nin atanması için
         if not self.barcode:
             self.barcode = f"PAL-{self.pk}"
+        self.is_inspected = self.inspected_by is not None
         super().save(*args, **kwargs)
 
     def __str__(self):

@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.urls import reverse_lazy
 from .models import Supplier, Shipment, Pallet
 from django import forms
@@ -34,6 +34,27 @@ class ShipmentListView(LoginRequiredMixin, ListView):
     model = Shipment
     template_name = "core/shipment_list.html"
     context_object_name = "shipments"
+    ordering = ['-id']
+
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        
+        # Filtreleme işlemi
+        supplier = self.request.GET.get('supplier')
+        date = self.request.GET.get('date')
+        is_filled = self.request.GET.get('is_filled')
+
+        if supplier:
+            queryset = queryset.filter(supplier__name__icontains=supplier)
+        
+        if date:
+            queryset = queryset.filter(date=date)
+        
+        if is_filled:
+            queryset = queryset.filter(is_filled=is_filled)
+
+        return queryset
 
 class ShipmentForm(forms.ModelForm):
     class Meta:
@@ -54,11 +75,22 @@ class ShipmentCreateView(LoginRequiredMixin, CreateView):
         form.instance.updated_by = self.request.user
         return super().form_valid(form)
     
+class ShipmentDetailView(DetailView):
+    model = Shipment
+    template_name = 'core/shipment_detail.html'
+    context_object_name = 'shipment'
+    ordering = ['-id']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['pallets'] = self.object.pallets.all()  # Sevkiyata bağlı paletler
+        return context
+    
 class PalletListView(LoginRequiredMixin, ListView):
     model = Pallet
     template_name = "core/pallet_list.html"
     context_object_name = "pallets"
-    paginate_by = 10  # Sayfalama (isteğe bağlı)
+    ordering = ['-id']
 
 class PalletCreateView(LoginRequiredMixin, CreateView):
     model = Pallet

@@ -3,6 +3,29 @@
   <div class="container mt-4">
     <h2>Sevkiyatlar</h2>
     <a href="{% url 'shipment_create' %}" class="btn btn-primary mb-3">+ Yeni Sevkiyat</a>
+
+    <!-- Filtreleme Formu -->
+    <form method="get" class="mb-3">
+      <div class="row">
+        <div class="col-md-3">
+          <input type="text" name="supplier" class="form-control" placeholder="Tedarikçi Ara" value="{{ request.GET.supplier }}">
+        </div>
+        <div class="col-md-3">
+          <input type="date" name="date" class="form-control" value="{{ request.GET.date }}">
+        </div>
+        <div class="col-md-3">
+          <select name="is_filled" class="form-control">
+            <option value="">Paletler Durumu</option>
+            <option value="True" {% if request.GET.is_filled == "True" %}selected{% endif %}>Evet</option>
+            <option value="False" {% if request.GET.is_filled == "False" %}selected{% endif %}>Hayır</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <button type="submit" class="btn btn-primary">Filtrele</button>
+        </div>
+      </div>
+    </form>
+
     <table class="table table-striped table-bordered">
       <thead>
         <tr>
@@ -10,7 +33,7 @@
           <th>Tedarikçi</th>
           <th>Sevk Tarihi</th>
           <th>Ekleyen</th>
-          <th>Oluşturulma</th>
+          <th>Paletler Girildi mi?</th>
           <th>Not</th>
           <th>Eylemler</th>
         </tr>
@@ -22,9 +45,10 @@
             <td>{{ shipment.supplier.name }}</td>
             <td>{{ shipment.date|date:"d.m.Y" }}</td>
             <td>{{ shipment.created_by.first_name }} {{ shipment.created_by.last_name }}</td>
-            <td>{{ shipment.created_at|date:"d.m.Y H:i" }}</td>
+            <td>{{ shipment.is_filled|yesno:"Evet,Hayır" }}</td>
             <td>{{ shipment.note|default:"-" }}</td>
             <td>
+                <a href="{% url 'shipment_detail' shipment.id %}" class="btn btn-sm btn-info">Detaylar</a>
                 <a href="{% url 'shipment_edit' shipment.id %}" class="btn btn-sm btn-warning">Düzenle</a>
                 <a href="{% url 'shipment_delete' shipment.id %}" class="btn btn-sm btn-danger">Sil</a>
             </td>

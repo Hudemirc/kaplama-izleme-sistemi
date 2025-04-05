@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load user_filters %}
+{% block content %}
+  <div class="container mt-4">
+    <h2>Hoşgeldiniz {{ user.username }} 👋</h2>
+    <p>Yetkiniz: 
+      {% if user.is_superuser %}
+        Admin
+      {% elif user.groups.first %}
+        {{ user.groups.first.name }}
+      {% else %}
+        Yetki yok
+      {% endif %}
+    </p>
+
+    <div class="row mt-4">
+
+      {% if user|has_group:"ofis" %}
+        <div class="col-md-4">
+          <div class="card p-3 shadow-sm">
+            <h5>Ofis Modülü</h5>
+            <a href="{% url 'supplier_list' %}" class="btn btn-primary mt-2">Tedarikçiler</a>
+            <a href="{% url 'shipment_list' %}" class="btn btn-primary mt-2">Sevkiyatlar</a>
+          </div>
+        </div>
+      {% endif %}
+
+      {% if user|has_group:"siniflandirma" %}
+        <div class="col-md-4">
+          <div class="card p-3 shadow-sm">
+            <h5>Sınıflandırma Modülü</h5>
+            <a href="#" class="btn btn-warning mt-2 disabled">(Yapım Aşamasında)</a>
+          </div>
+        </div>
+      {% endif %}
+
+      {% if user|has_group:"kesim" %}
+        <div class="col-md-4">
+          <div class="card p-3 shadow-sm">
+            <h5>Kesim Modülü</h5>
+            <a href="#" class="btn btn-danger mt-2 disabled">(Yapım Aşamasında)</a>
+          </div>
+        </div>
+      {% endif %}
+
+      {% if user.is_superuser %}
+        <div class="col-md-4">
+          <div class="card p-3 shadow-sm border border-success">
+            <h5>Admin Panel</h5>
+            <a href="/admin/" class="btn btn-success mt-2">Admin Girişi</a>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

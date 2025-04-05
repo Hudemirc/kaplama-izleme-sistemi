@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="container mt-4">
+    <h2>Sevkiyatlar</h2>
+    <a href="{% url 'shipment_create' %}" class="btn btn-primary mb-3">+ Yeni Sevkiyat</a>
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Tedarikçi</th>
+          <th>Tarih</th>
+          <th>Ekleyen</th>
+          <th>Oluşturulma</th>
+          <th>Not</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for shipment in shipments %}
+          <tr>
+            <td>{{ shipment.id }}</td>
+            <td>{{ shipment.supplier.name }}</td>
+            <td>{{ shipment.date }}</td>
+            <td>{{ shipment.created_by }}</td>
+            <td>{{ shipment.created_at|date:"d.m.Y H:i" }}</td>
+            <td>{{ shipment.note|default:"-" }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6">Henüz sevkiyat kaydı yok.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

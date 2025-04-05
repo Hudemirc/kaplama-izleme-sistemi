@@ -8,6 +8,7 @@
         <p><strong>Sevk Tarihi:</strong> {{ shipment.date|date:"d.m.Y" }}</p>
         <p><strong>Ekleyen:</strong> {{ shipment.created_by.first_name }} {{ shipment.created_by.last_name }}</p>
         <p><strong>Açıklama:</strong> {{ shipment.note|default:"-" }}</p>
+        <p><strong>Tüm paletler girildi mi?:</strong> {{ shipment.is_filled|yesno:"Evet,Hayır" }}</p>
         
         <h3>Bağlı Paletler:</h3>
         {% if pallets %}

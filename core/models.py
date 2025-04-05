@@ -39,7 +39,7 @@ class Shipment(models.Model):
     updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="updated_shipments")
     updated_at = models.DateTimeField(auto_now=True)
 
-    is_filled = models.BooleanField(default=False, verbose_name="Bilgiler Girildi")
+    is_filled = models.BooleanField(default=False, verbose_name="Tüm paletler girildi mi?")
 
     def __str__(self):
         return f"Sevkiyat-{self.supplier.name} {self.date}"

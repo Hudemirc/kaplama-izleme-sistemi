@@ -34,12 +34,11 @@ class ShipmentListView(LoginRequiredMixin, ListView):
     model = Shipment
     template_name = "core/shipment_list.html"
     context_object_name = "shipments"
-    ordering = ['-id']
-
+    ordering = ['-id']  # Varsayılan sıralama
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        
+
         # Filtreleme işlemi
         supplier = self.request.GET.get('supplier')
         date = self.request.GET.get('date')
@@ -53,6 +52,9 @@ class ShipmentListView(LoginRequiredMixin, ListView):
         
         if is_filled:
             queryset = queryset.filter(is_filled=is_filled)
+        
+        # is_filled True olanları sona alacak şekilde sıralama
+        queryset = queryset.order_by('is_filled', '-id')
 
         return queryset
 
@@ -141,12 +143,20 @@ class SupplierUpdateView(LoginRequiredMixin, UpdateView):
 
 class ShipmentUpdateView(LoginRequiredMixin, UpdateView):
     model = Shipment
-    fields = ["supplier", "date", "note"]
+    fields = ["supplier", "date", "is_filled", "note"]
     template_name = "core/shipment_form.html"
     success_url = reverse_lazy("shipment_list")
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = f"Sevkiyat Düzenle: {self.object.supplier.name} - {self.object.date}"
+        return context
+
     def form_valid(self, form):
         form.instance.updated_by = self.request.user
+        # `is_filled`'ı True yapıyoruz
+        if 'is_filled' in form.cleaned_data:
+            form.instance.is_filled = form.cleaned_data['is_filled']
         return super().form_valid(form)
     
 class ShipmentDeleteView(LoginRequiredMixin, DeleteView):

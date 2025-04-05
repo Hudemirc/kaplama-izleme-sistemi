@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="container mt-4">
+    <h2>Paletler</h2>
+    <a href="{% url 'pallet_create' %}" class="btn btn-primary mb-3">+ Yeni Palet</a>
+
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Sevkiyat</th>
+          <th>Ahşap Türü</th>
+          <th>Kalite</th>
+          <th>Uzunluk Grubu</th>
+          <th>m²</th>
+          <th>₺/m²</th>
+          <th>KDV (%)</th>
+          <th>Toplam (₺)</th>
+          <th>Kayıt</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for pallet in pallets %}
+          <tr>
+            <td>{{ pallet.id }}</td>
+            <td>{{ pallet.shipment }}</td>
+            <td>{{ pallet.wood_type.name }}</td>
+            <td>{{ pallet.supplier_quality_type }}</td>
+            <td>{{ pallet.length_group }}</td>
+            <td>{{ pallet.total_area }}</td>
+            <td>{{ pallet.unit_price }}</td>
+            <td>{{ pallet.vat_rate }}</td>
+            <td>{{ pallet.total_price_with_vat }}</td>
+            <td>{{ pallet.created_by }}<br><small>{{ pallet.created_at|date:"d.m.Y H:i" }}</small></td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="10">Henüz palet kaydı yok.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

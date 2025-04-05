@@ -2,16 +2,8 @@
 {% load user_filters %}
 {% block content %}
   <div class="container mt-4">
-    <h2>Hoşgeldiniz {{ user.username }} 👋</h2>
-    <p>Yetkiniz: 
-      {% if user.is_superuser %}
-        Admin
-      {% elif user.groups.first %}
-        {{ user.groups.first.name }}
-      {% else %}
-        Yetki yok
-      {% endif %}
-    </p>
+    <h2>Hoşgeldiniz {{ user.first_name }} 👋</h2>
+    
 
     <div class="row mt-4">
 

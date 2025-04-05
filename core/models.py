@@ -10,10 +10,11 @@ class WoodType(models.Model):
     
 
 class Supplier(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    phone = models.CharField(max_length=50, blank=True, null=True)
-    email = models.EmailField(blank=True, null=True)
-    note = models.TextField(blank=True, null=True)
+    name = models.CharField(max_length=100, verbose_name="Tedarikçi Adı")
+    country = models.CharField(max_length=100, blank=True, verbose_name="Ülke")
+    phone = models.CharField(max_length=20, null=True, blank=True, verbose_name="Telefon")
+    email = models.EmailField(blank=True, null=True, verbose_name="E-posta")
+    note = models.TextField(blank=True, null=True, verbose_name="Not")
 
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="created_suppliers")
     created_at = models.DateTimeField(auto_now_add=True)
@@ -52,16 +53,30 @@ class LengthGroup(models.Model):
         return self.name
     
 class Pallet(models.Model):
-    shipment = models.ForeignKey("Shipment", on_delete=models.CASCADE, related_name="pallets")
-    wood_type = models.ForeignKey(WoodType, on_delete=models.CASCADE)
-    supplier_quality_type = models.ForeignKey("SupplierQualityType", on_delete=models.SET_NULL, null=True, blank=True)
-    length_group = models.ForeignKey("LengthGroup", on_delete=models.SET_NULL, null=True, blank=True)
+    shipment = models.ForeignKey("Shipment", on_delete=models.CASCADE, related_name="pallets", verbose_name="Sevkiyat")
+    wood_type = models.ForeignKey("WoodType", on_delete=models.CASCADE, verbose_name="Ahşap Türü")
+    supplier_quality_type = models.ForeignKey("SupplierQualityType", on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Tedarikçi Kalitesi")
+    length_group = models.ForeignKey("LengthGroup", on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Uzunluk Grubu")
 
     barcode = models.CharField(max_length=100, unique=True)
-    total_area = models.FloatField(help_text="Tedarikçinin verdiği toplam m²")
+    total_area = models.FloatField(verbose_name="Toplam Alan (m²)")
 
-    unit_price = models.DecimalField(max_digits=10, decimal_places=2)
-    vat_rate = models.DecimalField(max_digits=5, decimal_places=2)
+    unit_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Birim Fiyat")
+    vat_rate = models.DecimalField(max_digits=5, decimal_places=2, verbose_name="KDV Oranı (%)")
+
+    # 💰 BURAYA EKLENECEK
+    CURRENCY_CHOICES = [
+        ('TRY', '₺ Türk Lirası'),
+        ('USD', '$ Amerikan Doları'),
+        ('EUR', '€ Euro'),
+    ]
+
+    currency = models.CharField(
+        max_length=3,
+        choices=CURRENCY_CHOICES,
+        default='TRY',
+        verbose_name="Para Birimi"
+    )
 
     total_vat = models.DecimalField(max_digits=10, decimal_places=2, editable=False)
     total_price = models.DecimalField(max_digits=10, decimal_places=2, editable=False)

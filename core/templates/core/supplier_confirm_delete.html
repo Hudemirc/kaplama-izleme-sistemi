@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="container mt-4">
+    <h2>Tedarikçi Sil</h2>
+    <p>Bu tedarikçiyi silmek istediğinize emin misiniz?</p>
+    <p><strong>{{ object }}</strong></p>
+
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Evet, Sil</button>
+      <a href="{% url 'supplier_list' %}" class="btn btn-secondary">Vazgeç</a>
+    </form>
+  </div>
+{% endblock %}

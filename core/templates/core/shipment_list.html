@@ -8,10 +8,11 @@
         <tr>
           <th>ID</th>
           <th>Tedarikçi</th>
-          <th>Tarih</th>
+          <th>Sevk Tarihi</th>
           <th>Ekleyen</th>
           <th>Oluşturulma</th>
           <th>Not</th>
+          <th>Eylemler</th>
         </tr>
       </thead>
       <tbody>
@@ -19,10 +20,14 @@
           <tr>
             <td>{{ shipment.id }}</td>
             <td>{{ shipment.supplier.name }}</td>
-            <td>{{ shipment.date }}</td>
-            <td>{{ shipment.created_by }}</td>
+            <td>{{ shipment.date|date:"d.m.Y" }}</td>
+            <td>{{ shipment.created_by.first_name }} {{ shipment.created_by.last_name }}</td>
             <td>{{ shipment.created_at|date:"d.m.Y H:i" }}</td>
             <td>{{ shipment.note|default:"-" }}</td>
+            <td>
+                <a href="{% url 'shipment_edit' shipment.id %}" class="btn btn-sm btn-warning">Düzenle</a>
+                <a href="{% url 'shipment_delete' shipment.id %}" class="btn btn-sm btn-danger">Sil</a>
+            </td>
           </tr>
         {% empty %}
           <tr><td colspan="6">Henüz sevkiyat kaydı yok.</td></tr>

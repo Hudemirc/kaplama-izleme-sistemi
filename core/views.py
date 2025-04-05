@@ -82,7 +82,7 @@ class PalletCreateView(LoginRequiredMixin, CreateView):
     
 class PalletUpdateView(UpdateView):
     model = Pallet
-    fields = ['name', 'unit_price', 'total_area']  # Ekleme / Güncelleme yapmak istediğimiz alanlar
+    fields = ['unit_price', 'total_area']  # Ekleme / Güncelleme yapmak istediğimiz alanlar
     template_name = 'core/pallet_form.html'
     success_url = reverse_lazy('pallet_list')  # Güncelleme sonrası listeye dön
     

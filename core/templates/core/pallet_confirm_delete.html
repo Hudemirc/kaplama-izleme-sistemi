@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h2>Palet Silme</h2>
+        <p>Bu paleti silmek istediğinizden emin misiniz?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Evet, Sil</button>
+            <a href="{% url 'pallet_list' %}" class="btn btn-secondary">Vazgeç</a>
+        </form>
+    </div>
+{% endblock %}

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
@@ -58,6 +58,7 @@ class PalletListView(LoginRequiredMixin, ListView):
     model = Pallet
     template_name = "core/pallet_list.html"
     context_object_name = "pallets"
+    paginate_by = 10  # Sayfalama (isteğe bağlı)
 
 class PalletCreateView(LoginRequiredMixin, CreateView):
     model = Pallet
@@ -78,6 +79,20 @@ class PalletCreateView(LoginRequiredMixin, CreateView):
         form.instance.created_by = self.request.user
         form.instance.updated_by = self.request.user
         return super().form_valid(form)
+    
+class PalletUpdateView(UpdateView):
+    model = Pallet
+    fields = ['name', 'unit_price', 'total_area']  # Ekleme / Güncelleme yapmak istediğimiz alanlar
+    template_name = 'core/pallet_form.html'
+    success_url = reverse_lazy('pallet_list')  # Güncelleme sonrası listeye dön
+    
+    def get_object(self):
+        return get_object_or_404(Pallet, pk=self.kwargs['pk'])
+    
+class PalletDeleteView(DeleteView):
+    model = Pallet
+    template_name = 'core/pallet_confirm_delete.html'
+    success_url = reverse_lazy('pallet_list')
     
 
 

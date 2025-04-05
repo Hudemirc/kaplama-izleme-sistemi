@@ -1,7 +1,13 @@
 from django.contrib import admin
-from .models import WoodType, Supplier, Shipment
+from .models import WoodType, Supplier, Shipment, SupplierQualityType, LengthGroup, Pallet
 
 admin.site.register(WoodType)
+
+admin.site.register(SupplierQualityType)
+
+admin.site.register(LengthGroup)
+
+admin.site.register(Pallet)
 
 @admin.register(Supplier)
 class SupplierAdmin(admin.ModelAdmin):

@@ -95,11 +95,15 @@ class Pallet(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
-        if not self.barcode:
-            self.barcode = f"PAL-{self.pk or 'TEMP'}"
+
+        
         self.total_price = self.total_area * float(self.unit_price)
         self.total_vat = self.total_price * float(self.vat_rate) / 100
         self.total_price_with_vat = self.total_price + self.total_vat
+        if not self.pk:
+            super().save(*args, **kwargs)  # İlk save, pk'nin atanması için
+        if not self.barcode:
+            self.barcode = f"PAL-{self.pk}"
         super().save(*args, **kwargs)
 
     def __str__(self):

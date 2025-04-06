@@ -6,5 +6,3 @@ __pycache__/
 /venv/
 .env/
 *.code-workspace
-/static/
-*.sqlite3

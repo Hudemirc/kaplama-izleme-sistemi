@@ -1,10 +1,10 @@
 __pycache__/
 *.pyc
-*.sqlite3
 *.log
 .env
-/static/
 /media/
 /venv/
 .env/
 *.code-workspace
+/static/
+*.sqlite3
